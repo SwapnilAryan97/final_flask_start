@@ -1,12 +1,14 @@
 version: "3.2"
 services:
   flask:
+    environment:
+      - FLASK_ENV=development
     build: .
     restart: always
     ports:
       - 80:5000
     stdin_open: true # docker run -i
     tty: true        # docker run -t
- #   command: ["flask", "run"]
+    command: ["flask", "run"]
     volumes:
       - .:/home/myuser
