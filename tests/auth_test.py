@@ -69,3 +69,7 @@ def test_dashboard_access(client):
     assert res.status_code == 302
 
 
+def test_upload_access(client):
+    res = client.get("/transactions/upload")
+    assert res.status_code == 302
+
