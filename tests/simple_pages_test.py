@@ -22,3 +22,9 @@ def test_request_about(client):
     assert response.status_code == 200
     assert b"About" in response.data
 
+def test_request_page1(client):
+    """This makes the index page"""
+    response = client.get("/welcome")
+    assert response.status_code == 200
+    assert b"welcome" in response.data
+
