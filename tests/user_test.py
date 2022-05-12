@@ -24,3 +24,9 @@ def test_accessing_user(application, add_user):
         assert user.email == 'tnvrra393@gmail.com'
         assert user.active == True
 
+def test_inital_balance(application, add_user):
+    with application.app_context():
+        user = User.query.filter_by(email='tnvrra393@gmail.com').first()
+        assert user.inital_balance == 0
+        assert user.get_balance() == 0
+
