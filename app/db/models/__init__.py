@@ -48,6 +48,29 @@ class Location(db.Model, SerializerMixin):
         }
 
 
+class Transaction(db.Model, SerializerMixin):
+    __tablename__ = 'transactions'
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Integer, unique=False)
+    transaction_type = db.Column(db.String(300), unique=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=False)
+    user = relationship("User", back_populates="transactions", uselist=False)
+
+    def __init__(self, user_id, amount, transaction_type):
+        self.user_id = user_id
+        self.amount = amount
+        self.transaction_type = transaction_type
+
+    def get_amount(self):
+        return self.amount
+
+    def get_transaction_type(self):
+        return self.transaction_type
+
+    def get_user_id(self):
+        return self.user_id
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -89,25 +112,3 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.email
-
-class Transaction(db.Model, SerializerMixin):
-    __tablename__ = 'transactions'
-    id = db.Column(db.Integer, primary_key=True)
-    amount = db.Column(db.Integer, unique=False)
-    transaction_type = db.Column(db.String(100), unique=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=False)
-    user = relationship("User", back_populates="transactions", uselist=False)
-
-    def __init__(self, user_id, amount, transaction_type):
-        self.user_id = user_id
-        self.amount = amount
-        self.transaction_type = transaction_type
-
-    def get_amount(self):
-        return self.amount
-
-    def get_transaction_type(self):
-        return self.transaction_type
-
-    def get_user_id(self):
-        return self.user_id
