@@ -28,3 +28,7 @@ def test_request_page1(client):
     assert response.status_code == 200
     assert b"welcome" in response.data
 
+def test_request_page_not_found(client):
+    """This makes the index page"""
+    response = client.get("/page5")
+    assert response.status_code == 404
