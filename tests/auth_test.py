@@ -62,3 +62,10 @@ def test_registration(application, client):
         log.info(user)
         assert user is None
         assert response.status_code == 400
+
+def test_dashboard_access(client):
+    """Test dashboard access"""
+    res = client.get("/dashboard")
+    assert res.status_code == 302
+
+
