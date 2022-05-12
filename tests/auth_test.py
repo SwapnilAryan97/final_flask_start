@@ -46,3 +46,19 @@ def test_login(application, client):
         db.session.delete(user)
 
 
+def test_registration(application, client):
+    """this test is for to check registration process"""
+    with application.app_context():
+        email = 'email@email.com'
+        password = 'testtest'
+        user = User.query.filter_by(email=email).first()
+        assert user is None
+
+        response = client.post("/register", data=dict(email=email, password=password, confirm=password),
+                               follow_redirects=True)
+
+        user = User.query.filter_by(email=email).first()
+        log = logging.getLogger("mycsv")
+        log.info(user)
+        assert user is None
+        assert response.status_code == 400
