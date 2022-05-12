@@ -30,3 +30,12 @@ def test_inital_balance(application, add_user):
         assert user.inital_balance == 0
         assert user.get_balance() == 0
 
+def test_adding_transactions(application, add_user):
+    with application.app_context():
+        user = User.query.filter_by(email='tnvrra393@gmail.com').first()
+        user.transactions = [Transaction(3000, 'CREDIT'), Transaction(-2000, 'DEBIT')]
+        db.session.commit()
+        # checking no of transactions for user tnvrra393@gmail.com
+        assert len(user.transactions) == 2
+        assert db.session.query(Transaction).count() == 2
+
