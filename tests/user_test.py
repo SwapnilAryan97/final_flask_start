@@ -69,6 +69,7 @@ def test_adding_different_user_transactions(application, add_user):
         # Check total transactions in tabel
         assert db.session.query(Transaction).count() == 5
 
+
 def test_deleting_user(application, add_user):
     with application.app_context():
         user = User.query.filter_by(email='tnvrra393@gmail.com').first()
@@ -76,3 +77,22 @@ def test_deleting_user(application, add_user):
         assert db.session.query(Transaction).count() == 2
         db.session.delete(user)
         assert db.session.query(Transaction).count() == 0
+
+
+def test_changing_user_transactions_check_balance(application, add_user):
+    with application.app_context():
+        user = User.query.filter_by(email='tnvrra393@gmail.com').first()
+        user.transactions = [Transaction(3000, 'CREDIT'), Transaction(-2000, 'DEBIT')]
+        db.session.commit()
+        result = db.session.query(functions.sum(Transaction.amount)).scalar()
+        assert result == 1000
+        transaction1 = Transaction.query.filter_by(amount=3000).first()
+        transaction1.amount = 4000
+        db.session.commit()
+        result = db.session.query(functions.sum(Transaction.amount)).scalar()
+        assert result == 2000
+        user.transactions.append(Transaction(2000, 'CREDIT'))
+        db.session.commit()
+        assert len(user.transactions) == 3
+        result = db.session.query(functions.sum(Transaction.amount)).scalar()
+        assert result == 4000
