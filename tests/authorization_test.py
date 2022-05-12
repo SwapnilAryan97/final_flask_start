@@ -19,11 +19,10 @@ def test_register(client):
                                      follow_redirects=True)
 
         assert login_response.status_code == 400
-
         response = client.get("/profile")
-        assert response.status_code == 200
+        assert response.status_code == 302
         response = client.get("/account")
-        assert response.status_code == 200
+        assert response.status_code == 302
         response = client.get("/logout")
         assert response.status_code == 302
 
