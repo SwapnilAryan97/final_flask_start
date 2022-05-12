@@ -68,3 +68,11 @@ def test_adding_different_user_transactions(application, add_user):
         assert len(user1.transactions) == 3
         # Check total transactions in tabel
         assert db.session.query(Transaction).count() == 5
+
+def test_deleting_user(application, add_user):
+    with application.app_context():
+        user = User.query.filter_by(email='tnvrra393@gmail.com').first()
+        user.transactions = [Transaction(3000, 'CREDIT'), Transaction(-2000, 'DEBIT')]
+        assert db.session.query(Transaction).count() == 2
+        db.session.delete(user)
+        assert db.session.query(Transaction).count() == 0
